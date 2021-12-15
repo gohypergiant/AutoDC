@@ -1,5 +1,5 @@
 ## AutoDC
-Automated data-centric processing
+#### Automated data-centric processing
 
 This repository is the official Python implementation of position paper "AutoDC: Automated data-centric processing". The implementation will continue being updated in the coming months.
 
