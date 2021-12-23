@@ -15,6 +15,10 @@ def edgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_
 
 		list_of_dir_outlier = [ name for name in os.listdir(outlier_dir) if os.path.isdir(os.path.join(outlier_dir, name)) ]
 		# list_of_dir_non_outlier = [ name for name in os.listdir(non_outlier_dir) if os.path.isdir(os.path.join(non_outlier_dir, name)) ]
+
+		# Remove existing data
+		if os.path.exists(output_path+"output/improved_data/"):
+		    	shutil.rmtree(output_path+"output/improved_data")
 		
 		image_classes = list_of_dir_outlier
 
@@ -30,9 +34,9 @@ def edgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_
 		    total_non_outlier_data_to_select = int((int(non_outlier_data_percent)/100)*total_non_outlier_data)
 		    total_outlier_data_to_select = int((int(outlier_data_percent)/100)*total_outlier_data)
 
-		    print("class : ", image_class)
-		    print("outlier data : ", total_outlier_data_to_select)
-		    print("non_outlier data : ", total_non_outlier_data_to_select)
+		    # print("class : ", image_class)
+		    # print("outlier data : ", total_outlier_data_to_select)
+		    # print("non_outlier data : ", total_non_outlier_data_to_select)
 
 		    improved_output_dir = output_path+"output/improved_data/"+image_class
 
@@ -49,7 +53,7 @@ def edgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_
 		    	srcpath = os.path.join(dirpath_non_outlier, fname)
 		    	shutil.copy(srcpath, improved_output_dir)
 
-		   	# Outloer data 
+		   	# Outlier data 
 		    dirpath_outlier = outlier_dir+image_class
 		    filenames_outlier = random.sample(os.listdir(dirpath_outlier), total_outlier_data_to_select)
 		    for fname in filenames_outlier:

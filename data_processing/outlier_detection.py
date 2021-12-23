@@ -1,15 +1,14 @@
 from img2vec_keras import Img2Vec
-
 from IPython.display import Image
-
 import glob
-import os
+import os,shutil
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import IsolationForest
 
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
@@ -19,22 +18,20 @@ import logging
 logger = logging.getLogger('ftpuploader')
 import edge_case_selection
 
+
 img2vec = Img2Vec()
 
-
-
-# input_path = "/Users/akashnair/Desktop/Akash/Project/Hypergiant/Data_Labeling/dogs-vs-cats/sample_data/"
-# output_path = "/Users/akashnair/Desktop/Akash/Project/Hypergiant/Data_Labeling/dogs-vs-cats/"
 
 
 def outlierDetection(input_path,output_path):
 
 	try:
 
-
-
 		list_of_dir = [ name for name in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, name)) ]
 		image_classes = list_of_dir
+
+		if os.path.exists(output_path+"output/outliers/"):
+		    	shutil.rmtree(output_path+"output/outliers")
 
 		for image_class in image_classes:
 		    image_paths = []
@@ -82,12 +79,8 @@ def outlierDetection(input_path,output_path):
 
 
 		    # Outlier detection
-		    from sklearn.ensemble import IsolationForest
-
 		    clf = IsolationForest(random_state=123)
 		    preds = clf.fit_predict(tsne_result_scaled)
-
-		    import shutil
 
 		    images = []
 		    image_paths_outlier = []
@@ -95,21 +88,13 @@ def outlierDetection(input_path,output_path):
 		    outlier_count = 0
 		    non_outlier_count = 0
 
+		    
+
 		    if not os.path.exists(output_path+"output/outliers/outlier_data/"+image_class):
 		    	os.makedirs(output_path+"output/outliers/outlier_data/"+image_class)
-		    # else:
-		    # 	all_files = os.listdir(output_path+"output/outliers/outlier_data/"+image_class)
-		    # 	for f in all_files:
-		    # 		os.remove(output_path+"output/outliers/outlier_data/"+image_class+"/"+f)
-
 
 		    if not os.path.exists(output_path+"output/outliers/non_outlier_data/"+image_class):
 		    	os.makedirs(output_path+"output/outliers/non_outlier_data/"+image_class)
-		    # else:
-		    # 	all_files = os.listdir(output_path+"output/outliers/outlier_data/"+image_class)
-		    # 	for f in all_files:
-		    # 		os.remove(output_path+"output/outliers/outlier_data/"+image_class+"/"+f)
-
 
 		    tsne_result_scaled_outlier = []
 		    for image_path in image_paths:
@@ -124,18 +109,9 @@ def outlierDetection(input_path,output_path):
 		            tsne_result_scaled_outlier.append(tsne_result_scaled[count])
 		            outlier_count = outlier_count + 1
 
-		            # Remove all existing files
-		            # all_files = os.listdir(output_path+"output/outliers/outlier_data/"+image_class)
-		            # for f in all_files:
-		            # 	os.remove(output_path+"output/outliers/outlier_data/"+image_class+"/"+f)
-
 		            imgName =  os.path.split(image_path)[1]
 		            shutil.copy(image_path, output_path+"output/outliers/outlier_data/"+image_class+"/"+imgName)
 		        else:
-
-		            # all_files = os.listdir(output_path+"output/outliers/outlier_data/"+image_class)
-		            # for f in all_files:
-		            # 	os.remove(output_path+"output/outliers/outlier_data/"+image_class+"/"+f)
 
 		            imgName =  os.path.split(image_path)[1]
 		            shutil.copy(image_path, output_path+"output/outliers/non_outlier_data/"+image_class+"/"+imgName)
@@ -149,9 +125,5 @@ def outlierDetection(input_path,output_path):
 	except Exception as e:
 		logger.error('Something went wrong: ' + str(e))
 	    
-	# edge_case_selection.edgeCaseSelection(input_path,output_path, 40 , 10)
-
-
-# outlierDetection(input_path,output_path)
 
 
