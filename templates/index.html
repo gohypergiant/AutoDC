@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Upload Files</title>
+    <meta charset="utf-8">
+
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js">script></script>
+
+    <style>hr, h3 {padding-bottom: 20px;}canvas {background-color: #fffff;}</style>
+    <style>
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+
+      <div class="header">
+        <h3 class="text-muted">Flask upload zip file and unzip</h3>
+      </div>
+
+      <form action="/upload/dataset" method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type="text" name="outlier_data_percent">
+        <input type="text" name="non_outlier_data_percent">
+        <input type="text" name="augmentation_data_percent">
+        <input type=submit value=Upload>
+      </form>
+    </div>
+
+    <script>
+    </script>
+  </body>
+</html>
