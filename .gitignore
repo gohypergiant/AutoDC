@@ -1,0 +1,4 @@
+.ipynb_checkpoints
+build/
+dist/
+autoDC.egg-info/
