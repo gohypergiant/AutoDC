@@ -16,7 +16,6 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import cv2
 import logging
 logger = logging.getLogger('ftpuploader')
-import edge_case_selection
 
 
 img2vec = Img2Vec()
