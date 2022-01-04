@@ -1,13 +1,13 @@
 import setuptools
 
-with open("../README.md", "r") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="autodc",
-    version="1.0.0",
+    version="1.0.6",
     author="akashanair92",
-    author_email="akashanair92@gmail.com.com",
+    author_email="akashanair92@gmail.com",
     description="Auto DC",
     long_description=long_description,
     long_description_content_type="text/markdown",
