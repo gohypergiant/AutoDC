@@ -1,5 +1,5 @@
 from img2vec_keras import Img2Vec
-from IPython.display import Image
+#from IPython.display import Image
 import glob
 import os,shutil
 
@@ -11,18 +11,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+#from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 import cv2
 import logging
 logger = logging.getLogger('ftpuploader')
 
-
 img2vec = Img2Vec()
 
-
-
-def outlierDetection(input_path,output_path):
+def OutlierDetection(input_path,output_path):
 
 	try:
 
@@ -75,8 +72,6 @@ def outlierDetection(input_path,output_path):
 		    # ax.autoscale(enable=True, axis='both', tight=True)
 		    # plt.show()
 
-
-
 		    # Outlier detection
 		    clf = IsolationForest(random_state=123)
 		    preds = clf.fit_predict(tsne_result_scaled)
@@ -86,8 +81,6 @@ def outlierDetection(input_path,output_path):
 		    count = 0
 		    outlier_count = 0
 		    non_outlier_count = 0
-
-		    
 
 		    if not os.path.exists(output_path+"output/outliers/outlier_data/"+image_class):
 		    	os.makedirs(output_path+"output/outliers/outlier_data/"+image_class)

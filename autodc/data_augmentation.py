@@ -4,9 +4,7 @@ import logging
 logger = logging.getLogger('ftpuploader')
 import augly.image as imaugs
 
-
-
-def imageAugmentation(input_path,output_path, aug_data_percent, aug_technique):
+def ImageAugmentation(input_path,output_path, aug_data_percent, aug_technique):
 
     try:
 
@@ -33,7 +31,6 @@ def imageAugmentation(input_path,output_path, aug_data_percent, aug_technique):
             # Create dir for improve data if not exist
             if not os.path.exists(improved_output_dir):
                 os.makedirs(improved_output_dir)
-
 
             # Copy files from outlier folder to final data folder
             # Non outlier data specific to an image class eg. "cats"

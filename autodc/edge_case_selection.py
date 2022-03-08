@@ -3,10 +3,7 @@ import shutil, random, os
 import logging
 logger = logging.getLogger('ftpuploader')
 
-
-
-
-def edgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_data_percent,):
+def EdgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_data_percent,):
 
 	try:
 
