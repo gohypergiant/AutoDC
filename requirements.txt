@@ -1,0 +1,2 @@
+git+https://github.com/jaredwinick/img2vec-keras
+-e .
