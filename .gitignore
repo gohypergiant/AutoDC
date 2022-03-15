@@ -1,5 +1,14 @@
-.ipynb_checkpoints
+#setup folders
 build/
 dist/
 autoDC.egg-info/
-setup.py
+
+# Byte-compiled
+__pycache__/
+
+# Jupyter Notebook
+.ipy*
+.jupyter
+.local
+.ipython
+.cache
