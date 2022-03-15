@@ -12,3 +12,9 @@ By using the AutoML system, such as Google Cloud AutoML, domain experts only nee
 ## Citation
 
 Zac Yung-Chun Liu, Shoumik Roychowdhury, Scott Tarlow, Akash Nair, Shweta Badhe, and Tejas Shah. AutoDC: Automated data-centric processing, NeurIPS 2021: DCAI workshop, [arXiv: 2111.12548](https://arxiv.org/abs/2111.12548).
+
+### [License](https://github.com/gohypergiant/AutoDC/blob/stable/LICENSE)
+
+
+### Contributing
+TBD
