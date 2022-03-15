@@ -1,7 +1,7 @@
 #setup folders
 build/
 dist/
-autoDC.egg-info/
+autodc.egg-info/
 
 # Byte-compiled
 __pycache__/
