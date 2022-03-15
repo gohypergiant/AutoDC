@@ -3,62 +3,79 @@ import shutil, random, os
 import logging
 logger = logging.getLogger('ftpuploader')
 
-def EdgeCaseSelection(input_path,output_path, non_outlier_data_percent, outlier_data_percent,):
+class EdgeCaseSelection:
+	def __init__(self):
+		self.input_path = input_path
+		self.output_path = output_path
+		self.non_outlier_data_ratio = non_outlier_data_ratio
+		self.outlier_data_ratio = outlier_data_ratio
 
-	try:
+	def image_data(
+		input_path: str,
+		output_path: str,
+		non_outlier_data_ratio: int,
+		outlier_data_ratio: int
+		):
 
-		outlier_dir = output_path+"output/outliers/outlier_data/"
-		non_outlier_dir = output_path+"output/outliers/non_outlier_data/"
+		try:
 
-		list_of_dir_outlier = [ name for name in os.listdir(outlier_dir) if os.path.isdir(os.path.join(outlier_dir, name)) ]
-		# list_of_dir_non_outlier = [ name for name in os.listdir(non_outlier_dir) if os.path.isdir(os.path.join(non_outlier_dir, name)) ]
+			outlier_dir = output_path+"output/outliers/outlier_data/"
+			non_outlier_dir = output_path+"output/outliers/non_outlier_data/"
+			list_of_dir_outlier = [ name for name in os.listdir(outlier_dir) if os.path.isdir(os.path.join(outlier_dir, name)) ]
+			# list_of_dir_non_outlier = [ name for name in os.listdir(non_outlier_dir) if os.path.isdir(os.path.join(non_outlier_dir, name)) ]
 
-		# Remove existing data
-		if os.path.exists(output_path+"output/improved_data/"):
-		    	shutil.rmtree(output_path+"output/improved_data")
-		
-		image_classes = list_of_dir_outlier
+			# Remove existing data
+			if os.path.exists(output_path+"output/improved_data/"):
+				shutil.rmtree(output_path+"output/improved_data")
 
-		for image_class in image_classes:
+			print(" ")
+			print("### AUTODC: Edge Case Selection -- In Progress --------")
+			print(" ")
 
-		    image_class_outlier_dir = outlier_dir+image_class
-		    image_class_non_outlier_dir = non_outlier_dir+image_class
+			image_classes = list_of_dir_outlier
 
-		    # onlyfiles = next(os.walk(image_class_outlier_dir))[2]
-		    total_non_outlier_data = len(os.listdir(image_class_non_outlier_dir))
-		    total_outlier_data = len(os.listdir(image_class_outlier_dir))
-		    
-		    total_non_outlier_data_to_select = int((int(non_outlier_data_percent)/100)*total_non_outlier_data)
-		    total_outlier_data_to_select = int((int(outlier_data_percent)/100)*total_outlier_data)
+			for image_class in image_classes:
 
-		    # print("class : ", image_class)
-		    # print("outlier data : ", total_outlier_data_to_select)
-		    # print("non_outlier data : ", total_non_outlier_data_to_select)
+				image_class_outlier_dir = outlier_dir+image_class
+				image_class_non_outlier_dir = non_outlier_dir+image_class
 
-		    improved_output_dir = output_path+"output/improved_data/"+image_class
+				# onlyfiles = next(os.walk(image_class_outlier_dir))[2]
+				total_non_outlier_data = len(os.listdir(image_class_non_outlier_dir))
+				total_outlier_data = len(os.listdir(image_class_outlier_dir))
 
-		    # Create dir for improve data if not exist
-		    if not os.path.exists(improved_output_dir):
-		    	os.makedirs(improved_output_dir)
+				total_non_outlier_data_to_select = int((int(non_outlier_data_ratio)/100)*total_non_outlier_data)
+				total_outlier_data_to_select = int((int(outlier_data_ratio)/100)*total_outlier_data)
 
+				# print("class : ", image_class)
+		    	# print("outlier data : ", total_outlier_data_to_select)
+		    	# print("non_outlier data : ", total_non_outlier_data_to_select)
 
-		   	# Copy files from outlier folder to final data folder
-		   	# Non outlier data specific to an image class eg. "cats"
-		    dirpath_non_outlier = non_outlier_dir+image_class
-		    filenames_ņon_outlier = random.sample(os.listdir(dirpath_non_outlier), total_non_outlier_data_to_select)
-		    for fname in filenames_ņon_outlier:
-		    	srcpath = os.path.join(dirpath_non_outlier, fname)
-		    	shutil.copy(srcpath, improved_output_dir)
+				improved_output_dir = output_path+"output/improved_data/"+image_class
 
-		   	# Outlier data 
-		    dirpath_outlier = outlier_dir+image_class
-		    filenames_outlier = random.sample(os.listdir(dirpath_outlier), total_outlier_data_to_select)
-		    for fname in filenames_outlier:
-		    	srcpath = os.path.join(dirpath_outlier, fname)
-		    	shutil.copy(srcpath, improved_output_dir)
+				# Create dir for improve data if not exist
+				if not os.path.exists(improved_output_dir):
+					os.makedirs(improved_output_dir)
 
-		return True
-	except Exception as e:
-		logger.error('Something went wrong: ' + str(e))
+				# Copy files from outlier folder to final data folder
+				# Non outlier data specific to an image class eg. "cats"
+				dirpath_non_outlier = non_outlier_dir+image_class
+				filenames_ņon_outlier = random.sample(os.listdir(dirpath_non_outlier), total_non_outlier_data_to_select)
+				for fname in filenames_ņon_outlier:
+					srcpath = os.path.join(dirpath_non_outlier, fname)
+					shutil.copy(srcpath, improved_output_dir)
 
-# edgeCaseSelection(input_path,output_path, 40 , 10)
+				# Outlier data
+				dirpath_outlier = outlier_dir+image_class
+				filenames_outlier = random.sample(os.listdir(dirpath_outlier), total_outlier_data_to_select)
+				for fname in filenames_outlier:
+					srcpath = os.path.join(dirpath_outlier, fname)
+					shutil.copy(srcpath, improved_output_dir)
+
+				print(" ")
+				print("### AUTODC: Edge Case Selection -- Completed --------")
+				print(" ")
+
+			return True
+
+		except Exception as e:
+			logger.error('Something went wrong: ' + str(e))
