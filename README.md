@@ -15,6 +15,7 @@ By using the AutoML system, such as Google Cloud AutoML, domain experts only nee
 **Full Paper**:<br>
 Zac Yung-Chun Liu, Shoumik Roychowdhury, Scott Tarlow, Akash Nair, Shweta Badhe, and Tejas Shah. AutoDC: Automated data-centric processing, NeurIPS 2021: DCAI workshop, [arXiv: 2111.12548](https://arxiv.org/abs/2111.12548).
 
+
 ## Dependencies
 
 - `opencv-python` >= 4.5.3.56
@@ -48,7 +49,12 @@ Optional, you can also specify:
 
 2. Using starter notebook `starter_image_data.ipynb`, just follow the steps.
 
-## License
+
+### Contributing
+TBD
+
+## [License](https://github.com/gohypergiant/AutoDC/blob/stable/LICENSE)
+
 
 `AutoDC` is released under Apache 2.0 License.
 
