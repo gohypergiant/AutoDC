@@ -1,45 +1,56 @@
-from img2vec_keras import Img2Vec
-#from IPython.display import Image
 import glob
-import os,shutil
+import logging
+import os
+import shutil
 
+import cv2
+from img2vec_keras import Img2Vec
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 
-import matplotlib.pyplot as plt
-#from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
-import cv2
-import logging
 logger = logging.getLogger('ftpuploader')
-
 img2vec = Img2Vec()
 
+# @ ZAC -- insert a one-liner describing what the class does
 class OutlierDetection:
-	def __init__(self):
-		self.input_path = input_path
-		self.output_path = output_path
+	"""<ONELINER>"""
 
-	def image_data(
-		input_path: str,
-		output_path: str
-		):
+	def __init__(self, verbose: bool = False):
+		self.input_directory = None
+		self.output_path = None
+		self.verbose = verbose
+
+	# @ ZAC -- complete the doc string below
+	def get_image_classes(self, input_image_directory: str, output_directory: str) -> list:
+		"""
+		:param input_path: input path of the ____
+		:param output_path: output path to write the ___ to
+		:return: list of image classes
+		"""
+		self.input_directory = input_image_directory.rstrip('/')
+		self.output_directory = output_directory.rstrip('/')
 
 		try:
-
-			list_of_dir = [ name for name in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, name)) ]
+			list_of_dir = [name for name in os.listdir(self.input_directory) if os.path.isdir(os.path.join(self.input_directory, name))]
 			image_classes = list_of_dir
+			return image_classes
 
-			if os.path.exists(output_path+"output/outliers/"):
-				shutil.rmtree(output_path+"output/outliers")
+		except Exception as e:
+			logger.error(f'ERROR: OutlierDetection.get_image_classes({self.input_directory}, {self.output_directory}): \n\t{e}.')
 
-			print(" ")
-			print("### AUTODC: Outlier Detection -- In Progress --------")
-			print(" ")
+		if os.path.exists(f"{self.output_directory}/output/outliers/"):
+			shutil.rmtree(f"{self.output_directory}/output/outliers/")
+
+		return image_classes
+
+	# @ ZAC -- complete doc string & param definitions below
+	def
+			if self.verbose:
+				print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
 
 			for image_class in image_classes:
 				image_paths = []
@@ -54,34 +65,14 @@ class OutlierDetection:
 
 				pca_50 = PCA(n_components=50)
 				pca_result_50 = pca_50.fit_transform(X)
-				print('Cumulative explained variation for 50 principal components: {}'.format(np.sum(pca_50.explained_variance_ratio_)))
-				print(np.shape(pca_result_50))
+				if self.verbose:
+					print('Cumulative explained variation for 50 principal components: {}'.format(np.sum(pca_50.explained_variance_ratio_)))
+					print(np.shape(pca_result_50))
 
 				tsne = TSNE(n_components=2, verbose=1, n_iter=3000)
 				tsne_result = tsne.fit_transform(pca_result_50)
 
 				tsne_result_scaled = StandardScaler().fit_transform(tsne_result)
-		    	# plt.scatter(tsne_result_scaled[:,0], tsne_result_scaled[:,1])
-
-		    	# images = []
-		    	# for image_path in image_paths:
-		    	#     image = cv2.imread(image_path, 3)
-		    	#     b,g,r = cv2.split(image)           # get b, g, r
-		    	#     image = cv2.merge([r,g,b])         # switch it to r, g, b
-		    	#     image = cv2.resize(image, (50,50))
-		    	#     images.append(image)
-
-		    	# fig, ax = plt.subplots(figsize=(20,15))
-		    	# artists = []
-
-		    	# for xy, i in zip(tsne_result_scaled, images):
-		    	#     x0, y0 = xy
-		    	#     img = OffsetImage(i, zoom=.7)
-		    	#     ab = AnnotationBbox(img, (x0, y0), xycoords='data', frameon=False)
-		    	#     artists.append(ax.add_artist(ab))
-		    	# ax.update_datalim(tsne_result_scaled)
-		    	# ax.autoscale(enable=True, axis='both', tight=True)
-		    	# plt.show()
 
 		    	# Outlier detection
 				clf = IsolationForest(random_state=123)
@@ -120,12 +111,10 @@ class OutlierDetection:
 						non_outlier_count = non_outlier_count+1
 						count = count + 1
 
-		    	# print("outlier_count : ",outlier_count)
-		    	# print("non_outlier_count : ",non_outlier_count)
-
-			print(" ")
-			print("### AUTODC: Outlier Detection -- Completed --------")
-			print(" ")
+				if self.verbose:
+					print("outlier_count : ",outlier_count)
+					print("non_outlier_count : ",non_outlier_count)
+					print("\n### AUTODC: Outlier Detection -- Completed --------\n")
 
 			return True
 
