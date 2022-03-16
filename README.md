@@ -24,7 +24,7 @@ Zac Yung-Chun Liu, Shoumik Roychowdhury, Scott Tarlow, Akash Nair, Shweta Badhe,
 - `python-magic-bin` >= 0.4.14
 - `augly` >= 0.2.1
 
-You also need Python >= 3.6. [Img2Vec](https://github.com/jaredwinick/img2vec-keras) is also utilized here.
+[Img2Vec](https://github.com/jaredwinick/img2vec-keras) is utilized here. You also need Python >= 3.6. 
 
 ## Install
 
