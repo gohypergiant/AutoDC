@@ -16,9 +16,12 @@ from sklearn.ensemble import IsolationForest
 logger = logging.getLogger('ftpuploader')
 img2vec = Img2Vec()
 
-# @ ZAC -- insert a one-liner describing what the class does
 class OutlierDetection:
-	"""<ONELINER>"""
+	"""
+	This routine starts with image embeddings creation using ResNet50 ImageNet pre-trained weights (Img2Vec),
+	then applys dimensionality reduction PCA and t-SNE,
+	finally utilizes Isolation Forest to identify outlier candidates.
+	"""
 
 	def __init__(self, verbose: bool = True):
 		self.input_directory = None
@@ -30,11 +33,10 @@ class OutlierDetection:
 
 		self.verbose = verbose
 
-	# @ ZAC -- complete the doc string below
 	def get_image_classes(self, input_image_directory: str, output_directory: str) -> list:
 		"""
-		:param input_path: input path of the ____
-		:param output_path: output path to write the ___ to
+		:param input_path: input path of the target image directory
+		:param output_path: output path to write the outlier candidates to the user-defiend output directory
 		:return: list of image classes
 		"""
 		self.input_directory = input_image_directory.rstrip('/')
@@ -84,10 +86,10 @@ class OutlierDetection:
 		self.dim_reduced_img_vectors = tsne_scaled_results
 		return self.dim_reduced_img_vectors
 
-	# @ ZAC -- please complete the doc string for this
 	def detect_outliers(self):
-		"""
-		:return: 
+		""" 
+		Use Isolation Forest to identify outlier candidates and save outlier and non-outlier images to the user-defined output directory
+		:return: True when the operation is successfull
 		"""
 		for image_class, dim_red_img_vecs in self.dim_reduced_img_vectors.items():
 
