@@ -9,7 +9,6 @@ from PIL import Image
 logger = logging.getLogger('ftpuploader')
 
 
-# @ZAC, please fill in the doc string for `aug_data_ratio`
 class DataAugmentation:
     def __init__(self, input_path: str, output_path: str,
                  aug_data_ratio: float, aug_technique: str,
@@ -17,8 +16,8 @@ class DataAugmentation:
         """
         :param input_path: input file directory where images are located
         :param output_path: output file directory location to write outlier image data
-        :param aug_data_ratio:
-        :param aug_technique: user-specified autmentation technique
+        :param aug_data_ratio: ratio of augmentated data to total train data
+        :param aug_technique: user-specified augmentation technique
         """
         self.input_path, = input_path
         self.output_path = output_path.rstrip('/')
@@ -66,10 +65,10 @@ class DataAugmentation:
             raise ValueError(f'Invalid Augmentation Technique: {list(aug_functions.keys())}')
         return aug_functions.get(aug_technique)
 
-    # @ZAC - please complete the doc string for what this method returns / does
     def augment_image_data(self) -> bool:
         """
-        :return:
+        Augmenting image data from the user-defined augmentation technique and augmented data ratio
+        :return: True if the process is successful
         """
         for image_class in self.image_classes:
             image_class_outlier_dir = f"{self.outlier_dir}{image_class}"
