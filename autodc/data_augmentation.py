@@ -65,7 +65,6 @@ class DataAugmentation:
             raise ValueError(f'Invalid Augmentation Technique: {list(aug_functions.keys())}')
         return aug_functions.get(aug_technique)
 
-    # @ZAC - please complete the doc string for what this method returns / does
     def augment_image_data(self) -> bool:
         """
         Augmenting image data from the user-defined augmentation technique and augmented data ratio
