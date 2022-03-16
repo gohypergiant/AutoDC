@@ -21,7 +21,8 @@ class OutlierDetection:
 
 	def __init__(self, verbose: bool = False):
 		self.input_directory = None
-		self.output_path = None
+		self.output_directory = None
+		self.image_classes = None
 		self.verbose = verbose
 
 	# @ ZAC -- complete the doc string below
@@ -35,46 +36,51 @@ class OutlierDetection:
 		self.output_directory = output_directory.rstrip('/')
 
 		try:
-			list_of_dir = [name for name in os.listdir(self.input_directory) if os.path.isdir(os.path.join(self.input_directory, name))]
-			image_classes = list_of_dir
-			return image_classes
+			list_of_dir = [name for name in os.listdir(self.input_directory)
+						   if os.path.isdir(os.path.join(self.input_directory, name))]
+			self.image_classes = list_of_dir
+
+			if os.path.exists(f"{self.output_directory}/output/outliers/"):
+				shutil.rmtree(f"{self.output_directory}/output/outliers/")
+			return self.image_classes
 
 		except Exception as e:
 			logger.error(f'ERROR: OutlierDetection.get_image_classes({self.input_directory}, {self.output_directory}): \n\t{e}.')
 
-		if os.path.exists(f"{self.output_directory}/output/outliers/"):
-			shutil.rmtree(f"{self.output_directory}/output/outliers/")
+	def vectorize_images(self) -> dict:
+		"""Vectorize images and perform dimensionality reduction using PCA and TSNE
+		:return: scaled dimensionality-reduced image vectors (values) by image class (key) as a Python dict
+		"""
+		if self.verbose:
+			print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
 
-		return image_classes
+		tsne_scaled_results = dict()
+		for image_class in self.image_classes:
+			image_paths = list()
+			image_paths.extend(glob.glob(f"{self.input_directory}/{image_class}/*.jpg"))
 
-	# @ ZAC -- complete doc string & param definitions below
-	def
+			image_vectors = dict()
+			for image_path in image_paths:
+				image_vectors[image_path] = img2vec.get_vec(image_path)
+			X = np.stack(list(image_vectors.values()))
+
+			pca_50 = PCA(n_components=50)
+			pca_result_50 = pca_50.fit_transform(X)
 			if self.verbose:
-				print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
+				print('Cumulative explained variation for 50 principal components: {}'.format(np.sum(pca_50.explained_variance_ratio_)))
+				print(np.shape(pca_result_50))
+			tsne = TSNE(n_components=2, verbose=1, n_iter=3000)
+			tsne_result = tsne.fit_transform(pca_result_50)
+			tsne_scaled = StandardScaler().fit_transform(tsne_result)
+			tsne_scaled_results.setdefault(image_class, tsne_scaled)
+			return tsne_scaled_results
 
-			for image_class in image_classes:
-				image_paths = []
-				image_paths.extend(glob.glob(input_path + image_class + '/*.jpg'))
-
-				image_vectors = {}
-				for image_path in image_paths:
-					vector = img2vec.get_vec(image_path)
-					image_vectors[image_path] = vector
-
-				X = np.stack(list(image_vectors.values()))
-
-				pca_50 = PCA(n_components=50)
-				pca_result_50 = pca_50.fit_transform(X)
-				if self.verbose:
-					print('Cumulative explained variation for 50 principal components: {}'.format(np.sum(pca_50.explained_variance_ratio_)))
-					print(np.shape(pca_result_50))
-
-				tsne = TSNE(n_components=2, verbose=1, n_iter=3000)
-				tsne_result = tsne.fit_transform(pca_result_50)
-
-				tsne_result_scaled = StandardScaler().fit_transform(tsne_result)
-
-		    	# Outlier detection
+	def detect_outliers(self):
+		"""
+		:return: 
+		""""""
+		For 
+		    	
 				clf = IsolationForest(random_state=123)
 				preds = clf.fit_predict(tsne_result_scaled)
 
