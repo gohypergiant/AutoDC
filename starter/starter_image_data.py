@@ -9,8 +9,8 @@ import argparse
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--input", required=True, help='input image directory')
 ap.add_argument("-o", "--output", required=True, help='output image directory')
-ap.add_argument("-r", "--o_ratio", required=False, default=10, help='outlier data ratio')
-ap.add_argument("-n", "--n_ratio", required=False, default=40, help='non outlier data ratio')
+ap.add_argument("-r", "--o_ratio", required=False, default=100, help='outlier data ratio')
+ap.add_argument("-n", "--n_ratio", required=False, default=100, help='non outlier data ratio')
 ap.add_argument("-a", "--a_ratio", required=False, default=20, help='augmented data ratio')
 ap.add_argument("-t", "--aug_fn", required=False, default='noise', help='augmentation techqniue')
 
