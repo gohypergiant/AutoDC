@@ -8,17 +8,14 @@ logger = logging.getLogger('ftpuploader')
 
 
 class EdgeCaseSelection:
-	# @ ZAC, does the non-outlier data ratio and outlier_data_ratio need to sum to 1? if so, maybe only 1 param is needed
-	# and the other can be calculated like "1 - non-outlier-data-ratio"
-	# Please also fill in the doc string accordingly
 	def __init__(self, input_path: str, output_path: str,
 				 non_outlier_data_ratio: float, outlier_data_ratio: float,
 				 verbose: bool = True):
 		"""
 		:param input_path: file directory where images are located
 		:param output_path: file directory to write images
-		:param non_outlier_data_ratio:
-		:param outlier_data_ratio:
+		:param non_outlier_data_ratio: the percentage of non-outlier data that will be included in the improved dataset
+		:param outlier_data_ratio: the percentage of identified outlier data that will be included in the improved dataset
 		"""
 		self.input_path = input_path
 		self.output_path = output_path.rstrip('/')
@@ -46,7 +43,6 @@ class EdgeCaseSelection:
 		self.image_classes = list_of_dir_outlier
 		return self.image_classes
 
-	# @ZAC -- not sure this is the right thing to name this method; pls rename as appropriate
 	def select_edge_cases(self):
 
 		for image_class in self.image_classes:
