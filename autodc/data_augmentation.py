@@ -1,12 +1,15 @@
-import os
-import shutil, random, os
 import logging
-logger = logging.getLogger('ftpuploader')
-import sys
+import random
+import os
+
 import augly.image as imaugs
 
+
+logger = logging.getLogger('ftpuploader')
+
+
 class DataAugmentation:
-    def __init__(self):
+    def __init__(self, input_path, output_path, aug_data_ratio, aug_technique):
         self.input_path, = input_path
         self.output_path = output_path
         self.aug_data_ratio = aug_data_ratio
