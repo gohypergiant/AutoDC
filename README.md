@@ -8,7 +8,7 @@ This repository is the official Python implementation of position paper "AutoDC:
 
 AutoDC is a framework to enable domain experts to automatically and systematically improve datasets without much coding requirement and manual process, the idea similar with AutoML (automated machine learning).
 
-By using the AutoML system, such as Google Cloud AutoML, domain experts only need to bring in the input data, and AutoML takes care of the manual ML processes, then produces output predictions, along with user-defined evaluation metrics. With a similar idea, AutoDC is designed for domain experts to bring in a labeled dataset, such as annotated images, to the system; AutoDC takes care of the manual data improvement processes, and produces the improved dataset, by automatically correcting the incorrect labels (with user feedbacks), detecting edge cases, and augmenting edge cases.
+By using the AutoML system, such as Google Cloud AutoML, domain experts only need to bring in the input data, and AutoML takes care of the manual ML processes, then produces output predictions, along with user-defined evaluation metrics. With a similar idea, AutoDC is designed for domain experts to bring in a labeled dataset, such as annotated images, to the system; AutoDC takes care of the manual data improvement processes, and produces the improved dataset, by automatically correcting the incorrect labels (with user feedbacks), detecting and selecting edge cases, and augmenting edge cases.
 
 <br>
 
@@ -43,9 +43,9 @@ python starter_image_data.py --input Users/sample_data/ --output Users/sample_da
 ```
 
 Optional, you can also specify:
-- `--o_ratio`: outlier data ratio, default: `10`
-- `--n_ratio`: non outlier data ratio, default: `40`
-- `--a_ratio`: augmented data ratio, default: `20`
+- `--o_ratio`: outlier data ratio, default: `100` (include all outlier data into the final improved dataset)
+- `--n_ratio`: non outlier data ratio, default: `100` (include all non-outlier data into the final improved dataset)
+- `--a_ratio`: augmented data ratio, default: `20` (augment 20% of outlier data into the final improved dataset)
 
 2. Using starter notebook `starter_image_data.ipynb`, just follow the steps.
 
