@@ -28,6 +28,9 @@ class EdgeCaseSelection:
 		self.non_outlier_dir = None
 
 	def get_image_classes(self):
+		"""Get image classes to use
+        	:return: list of image classes
+        	"""
 		self.outlier_dir = f"{self.output_path}/output/outliers/outlier_data/"
 		self.non_outlier_dir = f"{self.output_path}/output/outliers/non_outlier_data/"
 		list_of_dir_outlier = [name for name in os.listdir(self.outlier_dir)
@@ -44,7 +47,10 @@ class EdgeCaseSelection:
 		return self.image_classes
 
 	def select_edge_cases(self):
-
+		"""
+        	Selecting edge case to be included in the improved dataset from the outlier candidates, based on user-defined data ratio 
+        	:return: True if the process is successful
+        	"""
 		for image_class in self.image_classes:
 			image_class_outlier_dir = f"{self.outlier_dir}{image_class}"
 			image_class_non_outlier_dir = f"{self.non_outlier_dir}{image_class}"
