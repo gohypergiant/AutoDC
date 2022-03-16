@@ -1,3 +1,4 @@
+from collections import defaultdict
 import glob
 import logging
 import os
@@ -19,10 +20,14 @@ img2vec = Img2Vec()
 class OutlierDetection:
 	"""<ONELINER>"""
 
-	def __init__(self, verbose: bool = False):
+	def __init__(self, verbose: bool = True):
 		self.input_directory = None
 		self.output_directory = None
 		self.image_classes = None
+		self.image_paths_by_image_class = None
+		self.image_vectors = None
+		self.dim_reduced_img_vectors = None
+
 		self.verbose = verbose
 
 	# @ ZAC -- complete the doc string below
@@ -47,82 +52,88 @@ class OutlierDetection:
 		except Exception as e:
 			logger.error(f'ERROR: OutlierDetection.get_image_classes({self.input_directory}, {self.output_directory}): \n\t{e}.')
 
-	def vectorize_images(self) -> dict:
+	def vectorize_and_dim_reduce_images(self) -> dict:
 		"""Vectorize images and perform dimensionality reduction using PCA and TSNE
 		:return: scaled dimensionality-reduced image vectors (values) by image class (key) as a Python dict
 		"""
 		if self.verbose:
 			print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
 
+		self.image_paths_by_image_class = defaultdict(list)
 		tsne_scaled_results = dict()
 		for image_class in self.image_classes:
-			image_paths = list()
-			image_paths.extend(glob.glob(f"{self.input_directory}/{image_class}/*.jpg"))
+			self.image_paths_by_image_class[image_class].extend(glob.glob(f"{self.input_directory}/{image_class}/*.jpg"))
 
-			image_vectors = dict()
-			for image_path in image_paths:
-				image_vectors[image_path] = img2vec.get_vec(image_path)
-			X = np.stack(list(image_vectors.values()))
+			self.image_vectors = dict()
+			for image_path in self.image_paths_by_image_class[image_class]:
+				self.image_vectors[image_path] = img2vec.get_vec(image_path)
+			X = np.stack(list(self.image_vectors.values()))
 
 			pca_50 = PCA(n_components=50)
 			pca_result_50 = pca_50.fit_transform(X)
+
 			if self.verbose:
-				print('Cumulative explained variation for 50 principal components: {}'.format(np.sum(pca_50.explained_variance_ratio_)))
+				print(f'Cumulative explained variation for 50 principal components: {np.sum(pca_50.explained_variance_ratio_)}')
 				print(np.shape(pca_result_50))
+
 			tsne = TSNE(n_components=2, verbose=1, n_iter=3000)
 			tsne_result = tsne.fit_transform(pca_result_50)
 			tsne_scaled = StandardScaler().fit_transform(tsne_result)
 			tsne_scaled_results.setdefault(image_class, tsne_scaled)
-			return tsne_scaled_results
 
+		self.dim_reduced_img_vectors = tsne_scaled_results
+		return self.dim_reduced_img_vectors
+
+	# @ ZAC -- please complete the doc string for this
 	def detect_outliers(self):
 		"""
 		:return: 
-		""""""
-		For 
-		    	
-				clf = IsolationForest(random_state=123)
-				preds = clf.fit_predict(tsne_result_scaled)
+		"""
+		for image_class, dim_red_img_vecs in self.dim_reduced_img_vectors.items():
 
-				images = []
-				image_paths_outlier = []
-				count = 0
-				outlier_count = 0
-				non_outlier_count = 0
+			clf = IsolationForest(random_state=123)
+			preds = clf.fit_predict(dim_red_img_vecs)
 
-				if not os.path.exists(output_path+"output/outliers/outlier_data/"+image_class):
-					os.makedirs(output_path+"output/outliers/outlier_data/"+image_class)
+			images = list()
+			image_paths_outlier = list()
+			count = 0
+			outlier_count = 0
+			non_outlier_count = 0
 
-				if not os.path.exists(output_path+"output/outliers/non_outlier_data/"+image_class):
-					os.makedirs(output_path+"output/outliers/non_outlier_data/"+image_class)
+			if not os.path.exists(f"{self.output_directory}/output/outliers/outlier_data/{image_class}"):
+				os.makedirs(f"{self.output_directory}/output/outliers/outlier_data/{image_class}")
+			if not os.path.exists(f"{self.output_directory}/output/outliers/non_outlier_data/{image_class}"):
+				os.makedirs(f"{self.output_directory}/output/outliers/non_outlier_data/{image_class}")
 
-				tsne_result_scaled_outlier = []
-				for image_path in image_paths:
-					if preds[count] == -1:
-						image_paths_outlier.append(image_path)
+			tsne_result_scaled_outlier = list()
+			for image_path in self.image_paths_by_image_class[image_class]:
+				if preds[count] == -1:
+					image_paths_outlier.append(image_path)
 
-						image = cv2.imread(image_path, 3)
-						b,g,r = cv2.split(image)           # get b, g, r
-						image = cv2.merge([r,g,b])         # switch it to r, g, b
-						image = cv2.resize(image, (50,50))
-						images.append(image)
-						tsne_result_scaled_outlier.append(tsne_result_scaled[count])
-						outlier_count = outlier_count + 1
+					image = cv2.imread(image_path, 3)
+					b,g,r = cv2.split(image)           # get b, g, r
+					image = cv2.merge([r,g,b])         # switch it to r, g, b
+					image = cv2.resize(image, (50,50))
+					images.append(image)
+					tsne_result_scaled_outlier.append(dim_red_img_vecs[count])
+					outlier_count = outlier_count + 1
 
-						imgName =  os.path.split(image_path)[1]
-						shutil.copy(image_path, output_path+"output/outliers/outlier_data/"+image_class+"/"+imgName)
-					else:
-						imgName =  os.path.split(image_path)[1]
-						shutil.copy(image_path, output_path+"output/outliers/non_outlier_data/"+image_class+"/"+imgName)
-						non_outlier_count = non_outlier_count+1
-						count = count + 1
+					img_name = os.path.split(image_path)[1]
+					shutil.copy(image_path, f"{self.output_directory}/output/outliers/outlier_data/{image_class}/{img_name}")
 
-				if self.verbose:
-					print("outlier_count : ",outlier_count)
-					print("non_outlier_count : ",non_outlier_count)
-					print("\n### AUTODC: Outlier Detection -- Completed --------\n")
+				else:
+					img_name = os.path.split(image_path)[1]
+					shutil.copy(image_path, f"{self.output_directory}/output/outliers/non_outlier_data/{image_class}/{img_name}")
+					non_outlier_count = non_outlier_count + 1
+					count += 1
 
-			return True
+			if self.verbose:
+				print(f"outlier_count: {outlier_count}")
+				print(f"non_outlier_count: {non_outlier_count}")
+				print("\n### AUTODC: Outlier Detection -- Completed --------\n")
 
-		except Exception as e:
-			logger.error('Something went wrong: ' + str(e))
+		return True
+
+
+if __name__ == '__main__':
+	None
