@@ -9,18 +9,18 @@ logger = logging.getLogger('ftpuploader')
 
 class EdgeCaseSelection:
 	def __init__(self, input_path: str, output_path: str,
-				 non_outlier_data_ratio: float, outlier_data_ratio: float,
+				 non_outlier_data_percent: int, outlier_data_percent: int,
 				 verbose: bool = True):
 		"""
 		:param input_path: file directory where images are located
 		:param output_path: file directory to write images
-		:param non_outlier_data_ratio: the percentage of non-outlier data that will be included in the improved dataset
-		:param outlier_data_ratio: the percentage of identified outlier data that will be included in the improved dataset
+		:param non_outlier_data_percent: the percent of non-outlier data that will be included in the output/improved dataset
+		:param outlier_data_percent: the percent of identified outlier data that will be included in the output/improved dataset
 		"""
 		self.input_path = input_path
-		self.output_path = output_path.rstrip('/')
-		self.non_outlier_data_ratio = non_outlier_data_ratio
-		self.outlier_data_ratio = outlier_data_ratio
+		self.output_path = output_path
+		self.non_outlier_data_percent = non_outlier_data_percent
+		self.outlier_data_percent = outlier_data_percent
 		self.verbose = verbose
 
 		self.image_classes = None
@@ -46,11 +46,13 @@ class EdgeCaseSelection:
 		self.image_classes = list_of_dir_outlier
 		return self.image_classes
 
-	def select_edge_cases(self):
+	def select_img_edge_cases(self):
 		"""
-        	Selecting edge case to be included in the improved dataset from the outlier candidates, based on user-defined data ratio 
+        	Selecting edge case to be included in the output/improved dataset from the outlier candidates,
+			based on user-defined data percent
         	:return: True if the process is successful
         	"""
+		self.image_classes= self.get_image_classes()
 		for image_class in self.image_classes:
 			image_class_outlier_dir = f"{self.outlier_dir}{image_class}"
 			image_class_non_outlier_dir = f"{self.non_outlier_dir}{image_class}"
@@ -58,8 +60,8 @@ class EdgeCaseSelection:
 			total_non_outlier_data = len(os.listdir(image_class_non_outlier_dir))
 			total_outlier_data = len(os.listdir(image_class_outlier_dir))
 
-			total_non_outlier_data_to_select = int((int(self.non_outlier_data_ratio) / 100) * total_non_outlier_data)
-			total_outlier_data_to_select = int((int(self.outlier_data_ratio) / 100) * total_outlier_data)
+			total_non_outlier_data_to_select = int((int(self.non_outlier_data_percent) / 100) * total_non_outlier_data)
+			total_outlier_data_to_select = int((int(self.outlier_data_percent) / 100) * total_outlier_data)
 
 			if self.verbose:
 				print(f"class: {image_class}")
