@@ -12,7 +12,6 @@ from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 
-
 logger = logging.getLogger('ftpuploader')
 img2vec = Img2Vec()
 
@@ -23,9 +22,9 @@ class OutlierDetection:
 	finally utilizes Isolation Forest to identify outlier candidates.
 	"""
 
-	def __init__(self, verbose: bool = True):
-		self.input_directory = None
-		self.output_directory = None
+	def __init__(self, input_directory: str, output_directory: str, verbose: bool = True):
+		self.input_directory = input_directory
+		self.output_directory = output_directory
 		self.image_classes = None
 		self.image_paths_by_image_class = None
 		self.image_vectors = None
@@ -33,14 +32,12 @@ class OutlierDetection:
 
 		self.verbose = verbose
 
-	def get_image_classes(self, input_image_directory: str, output_directory: str) -> list:
+	def get_image_classes(self) -> list:
 		"""
 		:param input_path: input path of the target image directory
 		:param output_path: output path to write the outlier candidates to the user-defiend output directory
 		:return: list of image classes
 		"""
-		self.input_directory = input_image_directory.rstrip('/')
-		self.output_directory = output_directory.rstrip('/')
 
 		try:
 			list_of_dir = [name for name in os.listdir(self.input_directory)
@@ -48,7 +45,7 @@ class OutlierDetection:
 			self.image_classes = list_of_dir
 
 			if os.path.exists(f"{self.output_directory}/output/outliers/"):
-				shutil.rmtree(f"{self.output_directory}/output/outliers/")
+				shutil.rmtree(f"{self.output_directory}/output/outliers")
 			return self.image_classes
 
 		except Exception as e:
@@ -58,13 +55,14 @@ class OutlierDetection:
 		"""Vectorize images and perform dimensionality reduction using PCA and TSNE
 		:return: scaled dimensionality-reduced image vectors (values) by image class (key) as a Python dict
 		"""
+		self.image_classes = self.get_image_classes()
 		if self.verbose:
 			print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
 
 		self.image_paths_by_image_class = defaultdict(list)
 		tsne_scaled_results = dict()
 		for image_class in self.image_classes:
-			self.image_paths_by_image_class[image_class].extend(glob.glob(f"{self.input_directory}/{image_class}/*.jpg"))
+			self.image_paths_by_image_class[image_class].extend(glob.glob(f"{self.input_directory}/{image_class}/*.png"))
 
 			self.image_vectors = dict()
 			for image_path in self.image_paths_by_image_class[image_class]:
@@ -86,11 +84,12 @@ class OutlierDetection:
 		self.dim_reduced_img_vectors = tsne_scaled_results
 		return self.dim_reduced_img_vectors
 
-	def detect_outliers(self):
-		""" 
+	def detect_img_outliers(self):
+		"""
 		Use Isolation Forest to identify outlier candidates and save outlier and non-outlier images to the user-defined output directory
 		:return: True when the operation is successfull
 		"""
+		self.dim_reduced_img_vectors = self.vectorize_and_dim_reduce_images()
 		for image_class, dim_red_img_vecs in self.dim_reduced_img_vectors.items():
 
 			clf = IsolationForest(random_state=123)
@@ -129,10 +128,10 @@ class OutlierDetection:
 					non_outlier_count = non_outlier_count + 1
 					count += 1
 
-			if self.verbose:
-				print(f"outlier_count: {outlier_count}")
-				print(f"non_outlier_count: {non_outlier_count}")
-				print("\n### AUTODC: Outlier Detection -- Completed --------\n")
+		if self.verbose:
+			print(f"outlier_count: {outlier_count}")
+			print(f"non_outlier_count: {non_outlier_count}")
+			print("\n### AUTODC: Outlier Detection -- Completed --------\n")
 
 		return True
 
