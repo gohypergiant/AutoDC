@@ -24,7 +24,7 @@ Zac Yung-Chun Liu, Shoumik Roychowdhury, Scott Tarlow, Akash Nair, Shweta Badhe,
 - `python-magic-bin` >= 0.4.14
 - `augly` >= 0.2.1
 
-[Img2Vec](https://github.com/jaredwinick/img2vec-keras) is utilized here. You also need Python >= 3.6. 
+[Img2Vec](https://github.com/jaredwinick/img2vec-keras) is utilized here. You also need Python >= 3.6.
 
 ## Install
 
@@ -43,9 +43,9 @@ python starter_image_data.py --input Users/sample_data/ --output Users/sample_da
 ```
 
 Optional, you can also specify:
-- `--o_ratio`: outlier data ratio, default: `100` (include all outlier data into the final improved dataset)
-- `--n_ratio`: non outlier data ratio, default: `100` (include all non-outlier data into the final improved dataset)
-- `--a_ratio`: augmented data ratio, default: `20` (augment 20% of outlier data into the final improved dataset)
+- `--o_ratio`: outlier data percent, default: `100` (include all outlier data into the final improved dataset)
+- `--n_ratio`: non-outlier data percent, default: `100` (include all non-outlier data into the final improved dataset)
+- `--a_ratio`: augmented data percent, default: `20` (augment 20% of outlier data into the final improved dataset)
 
 2. Using starter notebook `starter_image_data.ipynb`, just follow the steps.
 
