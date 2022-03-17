@@ -11,19 +11,18 @@ logger = logging.getLogger('ftpuploader')
 
 class DataAugmentation:
     def __init__(self, input_path: str, output_path: str,
-                 aug_data_ratio: float, aug_technique: str,
-                 verbose: bool = False):
+                 aug_data_percent: float, aug_technique: str,
+                 verbose: bool = True):
         """
         :param input_path: input file directory where images are located
         :param output_path: output file directory location to write outlier image data
-        :param aug_data_ratio: ratio of augmentated data to total train data
+        :param aug_data_percent: the number of percent of total train data to be augmented and added to output/improved dataset
         :param aug_technique: user-specified augmentation technique
         """
-        self.input_path, = input_path
-        self.output_path = output_path.rstrip('/')
-        self.aug_data_ratio = aug_data_ratio
+        self.input_path = input_path
+        self.output_path = output_path
+        self.aug_data_percent = aug_data_percent
         self.aug_technique = aug_technique
-
         self.verbose = verbose
 
         self.outlier_dir = None
@@ -65,22 +64,24 @@ class DataAugmentation:
             raise ValueError(f'Invalid Augmentation Technique: {list(aug_functions.keys())}')
         return aug_functions.get(aug_technique)
 
-    def augment_image_data(self) -> bool:
+    def augment_img_data(self) -> bool:
         """
-        Augmenting image data from the user-defined augmentation technique and augmented data ratio
+        Augmenting image data from the user-defined augmentation technique and augmented data percent
         :return: True if the process is successful
         """
+        self.image_classes = self.get_image_classes()
         for image_class in self.image_classes:
             image_class_outlier_dir = f"{self.outlier_dir}{image_class}"
             total_outlier_data = len(os.listdir(image_class_outlier_dir))
 
-            total_outlier_data_to_select = int((int(self.aug_data_ratio) / 100) * total_outlier_data)
+            total_outlier_data_to_select = int((int(self.aug_data_percent) / 100) * total_outlier_data)
 
             if self.verbose:
                 print(f"class: {image_class}")
                 print(f"outlier data: {total_outlier_data_to_select}")
 
             improved_output_dir = f"{self.output_path}/output/improved_data/{image_class}"
+            # Create dir for improve data if not exist
             if not os.path.exists(improved_output_dir):
                 os.makedirs(improved_output_dir)
 
