@@ -27,12 +27,12 @@ setuptools.setup(
     ],
     include_package_data=True,
     install_requires=[
-        "opencv-python==4.5.3.56",
-        "scikit-learn==0.24.2",
-        "numpy==1.19.5",
-        "matplotlib==3.4.3",
-        "python-magic-bin==0.4.14",
         "augly==0.2.1",
+        "matplotlib==3.4.3",
+        "numpy==1.19.5",
+        "opencv-python==4.5.3.56",
+        "python-magic-bin==0.4.14",
+        "scikit-learn==0.24.2"
     ],
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
