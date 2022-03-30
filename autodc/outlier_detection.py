@@ -26,6 +26,7 @@ class OutlierDetection:
 		self.input_directory = input_directory
 		self.output_directory = output_directory
 		self.image_classes = None
+		self.all_image_paths_by_image_class = None
 		self.image_paths_by_image_class = None
 		self.image_vectors = None
 		self.dim_reduced_img_vectors = None
@@ -57,16 +58,24 @@ class OutlierDetection:
 		"""
 		self.image_classes = self.get_image_classes()
 		if self.verbose:
-			print(" \n### AUTODC: Outlier Detection -- In Progress --------'\n")
+			print(" \n### AUTODC: Outlier Detection -- In Progress --------\n")
 
+		self.all_image_paths_by_image_class = defaultdict(list)
 		self.image_paths_by_image_class = defaultdict(list)
 		tsne_scaled_results = dict()
+		valid_images = [".jpg", ".png"] # only supports jpg and png
 		for image_class in self.image_classes:
-			self.image_paths_by_image_class[image_class].extend(glob.glob(f"{self.input_directory}/{image_class}/*.png"))
+			if self.verbose:
+				print(f"class: {image_class}")
+			self.all_image_paths_by_image_class[image_class].extend(glob.glob(f"{self.input_directory}/{image_class}/*"))
 
 			self.image_vectors = dict()
-			for image_path in self.image_paths_by_image_class[image_class]:
-				self.image_vectors[image_path] = img2vec.get_vec(image_path)
+			for image_path in self.all_image_paths_by_image_class[image_class]:
+				ext = os.path.splitext(image_path)[1]
+				if ext.lower() in valid_images:
+					self.image_vectors[image_path] = img2vec.get_vec(image_path)
+					self.image_paths_by_image_class[image_class].append(image_path)
+
 			X = np.stack(list(self.image_vectors.values()))
 
 			pca_50 = PCA(n_components=50)
@@ -126,11 +135,14 @@ class OutlierDetection:
 					img_name = os.path.split(image_path)[1]
 					shutil.copy(image_path, f"{self.output_directory}/output/outliers/non_outlier_data/{image_class}/{img_name}")
 					non_outlier_count = non_outlier_count + 1
-					count += 1
+				count = count + 1
+
+			if self.verbose:
+				print(f"class: {image_class}")
+				print(f"outlier_count: {outlier_count}")
+				print(f"non_outlier_count: {non_outlier_count}")
 
 		if self.verbose:
-			print(f"outlier_count: {outlier_count}")
-			print(f"non_outlier_count: {non_outlier_count}")
 			print("\n### AUTODC: Outlier Detection -- Completed --------\n")
 
 		return True

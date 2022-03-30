@@ -5,9 +5,7 @@ import os
 import augly.image as imaugs
 from PIL import Image
 
-
 logger = logging.getLogger('ftpuploader')
-
 
 class DataAugmentation:
     def __init__(self, input_path: str, output_path: str,
@@ -28,7 +26,6 @@ class DataAugmentation:
         self.outlier_dir = None
         self.image_classes = None
 
-
     def get_image_classes(self):
         """Get image classes to use
         :return: list of image classes
@@ -37,7 +34,7 @@ class DataAugmentation:
         list_of_dir_outlier = [name for name in os.listdir(self.outlier_dir)
                                if os.path.isdir(os.path.join(self.outlier_dir, name))]
         if self.verbose:
-            print("AUTODC: Collected image classes --------\n")
+            print("### AUTODC: Data Augmentation -- In Progress --------\n")
 
         self.image_classes = list_of_dir_outlier
         return self.image_classes
@@ -51,13 +48,13 @@ class DataAugmentation:
         :return: an augmented PIL Image
         """
         aug_functions = dict(
-            noise=imaugs.random_noise(outlier_path, output_path),
-            crop=imaugs.crop(outlier_path, output_path),
-            vflip=imaugs.vflip(outlier_path, output_path),
-            rotate=imaugs.rotate(outlier_path, output_path),
-            saturation=imaugs.saturation(outlier_path, output_path),
-            brightness=imaugs.brightness(outlier_path, output_path),
-            scale=imaugs.scale(outlier_path, output_path)
+        noise=imaugs.random_noise(outlier_path, output_path),
+        crop=imaugs.crop(outlier_path, output_path),
+        vflip=imaugs.vflip(outlier_path, output_path),
+        rotate=imaugs.rotate(outlier_path, output_path),
+        saturation=imaugs.saturation(outlier_path, output_path),
+        brightness=imaugs.brightness(outlier_path, output_path),
+        scale=imaugs.scale(outlier_path, output_path)
         )
 
         if aug_technique.lower() not in aug_functions:
@@ -93,10 +90,11 @@ class DataAugmentation:
             filenames_outlier = random.sample(os.listdir(dirpath_outlier), total_outlier_data_to_select)
             output_path_string = f"{self.output_path}/output/improved_data/{image_class}/aug_"
             for fname in filenames_outlier:
-                print(fname)
-                DataAugmentation.image_aug_technique(self.aug_technique,
+                aug_img = DataAugmentation.image_aug_technique(str(self.aug_technique),
                                                      f"{dirpath_outlier}/{fname}",
                                                      f"{output_path_string}{fname}")
+                aug_img.save(f"{output_path_string}{fname}")
+
         if self.verbose:
             print("\n### AUTODC: Data Augmentation -- Completed --------\n")
 

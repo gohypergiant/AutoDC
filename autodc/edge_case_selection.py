@@ -3,9 +3,7 @@ import os
 import random
 import shutil
 
-
 logger = logging.getLogger('ftpuploader')
-
 
 class EdgeCaseSelection:
 	def __init__(self, input_path: str, output_path: str,
@@ -89,8 +87,8 @@ class EdgeCaseSelection:
 				srcpath = os.path.join(dirpath_outlier, fname)
 				shutil.copy(srcpath, improved_output_dir)
 
-			if self.verbose:
-				print("\n### AUTODC: Edge Case Selection -- Completed --------\n")
+		if self.verbose:
+			print("\n### AUTODC: Edge Case Selection -- Completed --------\n")
 
 		return True
 
