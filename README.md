@@ -1,6 +1,6 @@
 # AutoDC: Automated data-centric processing
 
-[![GitHub license](https://img.shields.io/github/license/gohypeegiant/AutoDC)](https://github.com/gohypergiant/AutoDC/blob/main/LICENSE.txt)
+[![GitHub license](https://img.shields.io/github/license/gohypeegiant/AutoDC)](https://github.com/gohypergiant/AutoDC/blob/stable/LICENSE)
 
 This repository is the official Python implementation of position paper "AutoDC: Automated data-centric processing". The implementation will continue being updated in the coming months. Note that only image data is supported.
 
