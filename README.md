@@ -52,7 +52,7 @@ Optional, you can also specify:
 
 ## Contributing
 
-If you are interested in contributing to AutoDC project, please check out the [Contributor Guide](https://github.com/gohypergiant/AutoDC/contributing.md)) and the [Code of Conduct](https://github.com/gohypergiant/AutoDC/code-of-conduct.md)).
+If you are interested in contributing to AutoDC project, please check out the [Contributor Guide](https://github.com/gohypergiant/AutoDC/blob/stable/contributing.md) and the [Code of Conduct](https://github.com/gohypergiant/AutoDC/blob/stable/code-of-conduct.md).
 
 ## [License](https://github.com/gohypergiant/AutoDC/blob/stable/LICENSE)
 
