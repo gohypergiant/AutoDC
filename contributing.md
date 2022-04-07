@@ -11,7 +11,7 @@ review [code of conduct](https://github.com/gohypergiant/AutoDC/code-of-conduct.
 3. Consider whether documentation or tests need to be added or updated as part of the change, and add them as needed.
 4. Open a pull request against the master branch of gohypergiant/AutoDC. Only in special cases would the PR be opened against other branches.
 5. The PR title should describe the proposed change in the PR itself.
-	* Follow [The 7 rules for a great commit message]((http://chris.beams.io/posts/git-commit/))
+	* Follow [The 7 rules for a great commit message]((http://chris.beams.io/posts/git-commit/)
 	* Separate subject from body with a blank line
 	* Limit the subject line to 50 characters
 	* Capitalize the subject line
