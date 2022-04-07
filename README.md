@@ -50,13 +50,18 @@ Optional, you can also specify:
 2. Using starter notebook `starter_image_data.ipynb`, just follow the steps.
 
 
-### Contributing
-TBD
+## Contributing
+
+If you are interested in contributing to AutoDC project, please check out the [Contributor Guide](https://github.com/gohypergiant/AutoDC/contributing.md)) and the [Code of Conduct](https://github.com/gohypergiant/AutoDC/code-of-conduct.md)).
 
 ## [License](https://github.com/gohypergiant/AutoDC/blob/stable/LICENSE)
 
 
 `AutoDC` is released under Apache 2.0 License.
+
+## Sponsorship
+
+AutoDC project has been sponsored by [Hypergiant LLC](https://www.hypergiant.com/) since Nov 2021.
 
 ## Citation
 
